@@ -9,7 +9,7 @@
     "watch": "webpack --watch",
     "start": "npm run watch"
   },
-  "author": "Artem Tyurin",
+  "author": "Artem Tyurin <artem.tyurin@gmail.com>",
   "license": "ISC",
   "dependencies": {
     "classnames": "^2.2.3",

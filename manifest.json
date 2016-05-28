@@ -3,6 +3,10 @@
   "name": "Better things to do",
   "version": "0.0.3",
 
+  "default_locale": "en",
+
+  "author": "Artem Tyurin <artem.tyurin@gmail.com>",
+
   "background": {
     "scripts": [
       "background.js"
