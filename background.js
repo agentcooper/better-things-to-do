@@ -101,10 +101,6 @@ chrome.runtime.onInstalled.addListener(() => {
       return {
         redirectUrl: redirectUrl
       };
-    } else {
-      // console.log('Updating tab %s', details.tabId, details.url, details);
-
-      // chrome.tabs.update(details.tabId, { url: redirectUrl });
     }
   }, {
     urls: ['<all_urls>']
