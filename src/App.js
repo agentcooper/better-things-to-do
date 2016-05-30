@@ -6,13 +6,17 @@ import moment from 'moment';
 
 const MINUTE = 60 * 1000;
 
+const WAIT_TIME = 1 * MINUTE;
+
 class App extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      waitTime: 60000
-    };
+    this.state = { waitTime: WAIT_TIME };
+  }
+
+  resetTimer() {
+    this.setState({ waitTime: WAIT_TIME });
   }
 
   tick() {
@@ -25,6 +29,10 @@ class App extends React.Component {
         this.tick();
       }
     }, 1000);
+  }
+
+  componentWillReceiveProps() {
+    this.resetTimer();
   }
 
   componentDidMount(event) {
