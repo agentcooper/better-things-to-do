@@ -27,9 +27,5 @@
     "index.html",
     "dist/bundle.js",
     "dist/style.css"
-  ],
-
-  "chrome_url_overrides": {
-    "newtab": "index.html"
-  }
+  ]
 }
