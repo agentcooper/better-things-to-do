@@ -1,8 +1,8 @@
 #### Better things to do
 
-Dead simple Chrome extenstion to save up some time.
+Dead simple Chrome extension to save up some time.
 
-You add a website to the list and the extenstion asks you to wait for 60 seconds before visiting it. Timer stops if the tab is not active.
+You add a website to the list and the extension asks you to wait for 60 seconds before visiting it. Timer stops if the tab is not active.
 
 <img src="screenshots/01-options.png" />
 
