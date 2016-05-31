@@ -12,4 +12,4 @@ You add a website to the list and the extension asks you to wait for 60 seconds 
 
 ### Install
 
-You can install from [Chrome store](https://chrome.google.com/webstore/detail/better-things-to-do/begggblpkegcnammjagcmplfnpopocla/) or drag `better-things-to-do.crx` to [chrome://extensions/](chrome://extensions/). Use `npm run publish` to rebuild `.crx` file.
+You can install from [Chrome store](https://chrome.google.com/webstore/detail/better-things-to-do/begggblpkegcnammjagcmplfnpopocla/) or drag `better-things-to-do.crx` to <a href="chrome://extensions/">chrome://extensions/</a>. Use `npm run publish` to rebuild `.crx` file.
