@@ -58,85 +58,80 @@ const setup = () => {
   })
 }
 
-console.log('Installing runtime...');
-chrome.runtime.onInstalled.addListener(() => {
-  console.log('Runtime installed');
+const blockedHTMLUrl = chrome.runtime.getURL('index.html');
 
-  const blockedHTMLUrl = chrome.runtime.getURL('index.html');
+chrome.webRequest.onBeforeRequest.addListener((details) => {
+  if (details.url.startsWith('chrome-extension://')) {
+    return;
+  }
+  if (details.url.startsWith('file://')) {
+    return;
+  }
+  if (details.tabId < 0) {
+    return;
+  }
+  if (whitelistTabIds[details.tabId]) {
+    return;
+  }
 
-  chrome.webRequest.onBeforeRequest.addListener((details) => {
-    if (details.url.startsWith('chrome-extension://')) {
-      return;
-    }
-    if (details.url.startsWith('file://')) {
-      return;
-    }
-    if (details.tabId < 0) {
-      return;
-    }
-    if (whitelistTabIds[details.tabId]) {
-      return;
-    }
+  const shouldBlockUrl = isBlocked(details.url);
 
-    const shouldBlockUrl = isBlocked(details.url);
+  if (!shouldBlockUrl) {
+    return;
+  }
 
-    if (!shouldBlockUrl) {
-      return;
-    }
+  const redirectUrl =
+    blockedHTMLUrl + '#' +
+    encodeURIComponent(
+      JSON.stringify({
+        url: details.url,
+        unblockCount: getUnblockCount(details.url),
+        lastVisit: getLastVisit(details.url),
+      })
+    );
 
-    const redirectUrl =
-      blockedHTMLUrl + '#' +
-      encodeURIComponent(
-        JSON.stringify({
-          url: details.url,
-          unblockCount: getUnblockCount(details.url),
-          lastVisit: getLastVisit(details.url),
-        })
-      );
+  if (details.type === 'main_frame') {
+    console.log('Blocking request to %s', details.url);
+    console.log('Redirect to %s', redirectUrl);
 
-    if (details.type === 'main_frame') {
-      console.log('Blocking request to %s', details.url);
-      console.log('Redirect to %s', redirectUrl);
+    return {
+      redirectUrl: redirectUrl
+    };
+  }
+}, {
+  urls: ['<all_urls>']
+}, ['blocking']);
 
-      return {
-        redirectUrl: redirectUrl
-      };
-    }
-  }, {
-    urls: ['<all_urls>']
-  }, ['blocking']);
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (!sender.tab) {
+    return;
+  }
 
-  chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    if (!sender.tab) {
-      return;
-    }
+  const tabId = sender.tab.id;
 
-    const tabId = sender.tab.id;
-
-    if (tabId < 0) {
-      return;
-    }
+  if (tabId < 0) {
+    return;
+  }
 
 
-    if (!request.allow) {
-      return sendResponse({ error: 'WTF?' });
-    }
+  if (!request.allow) {
+    return sendResponse({ error: 'WTF?' });
+  }
 
-    if (isBlocked(request.allow)) {
-      setBlock(request.allow, false);
-      whitelistTab(tabId, true);
+  if (isBlocked(request.allow)) {
+    setBlock(request.allow, false);
+    whitelistTab(tabId, true);
 
-      console.log('Will block %s in %s', request.allow, request.time);
-      setTimeout(() => {
-        setBlock(request.allow, true);
-        whitelistTab(tabId, false);
-      }, request.time);
+    console.log('Will block %s in %s', request.allow, request.time);
+    setTimeout(() => {
+      setBlock(request.allow, true);
+      whitelistTab(tabId, false);
+    }, request.time);
 
-      sendResponse({ allowed: !isBlocked(request.allow), timeout: request.time });
-    } else {
-      sendResponse({ allowed: true });
-    }
-  });
+    sendResponse({ allowed: !isBlocked(request.allow), timeout: request.time });
+  } else {
+    sendResponse({ allowed: true });
+  }
 });
 
 chrome.storage.onChanged.addListener(() => {
