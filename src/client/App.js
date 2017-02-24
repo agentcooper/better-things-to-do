@@ -1,15 +1,35 @@
+// @flow
+
 import React from 'react';
 
 import classNames from 'classnames';
 
 import moment from 'moment';
 
+import type {
+  Visit,
+  ClientPayload,
+  ClientMessage,
+  AllowedResponse,
+} from '../types';
+
 const MINUTE = 60 * 1000;
 
 const WAIT_TIME = 1 * MINUTE;
 
+type Props = {
+  params: ClientPayload,
+};
+
+type State = {
+  waitTime: number,
+};
+
 class App extends React.Component {
-  constructor(props) {
+  props: Props;
+  state: State;
+
+  constructor(props: Props) {
     super(props);
 
     this.state = { waitTime: WAIT_TIME };
@@ -35,19 +55,21 @@ class App extends React.Component {
     this.resetTimer();
   }
 
-  componentDidMount(event) {
+  componentDidMount() {
     const { params } = this.props;
 
     this.tick();
   }
 
-  handleAllowClick(time) {
+  handleAllowClick(time: number) {
     const { params } = this.props;
 
-    chrome.runtime.sendMessage({
+    const message: ClientMessage = {
       allow: params.url,
-      time: time
-    }, (response) => {
+      time: time,
+    };
+
+    chrome.runtime.sendMessage(message, (response: AllowedResponse) => {
       console.log(response);
 
       if (response.allowed) {
