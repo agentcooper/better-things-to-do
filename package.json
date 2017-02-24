@@ -8,7 +8,7 @@
     "build": "webpack",
     "watch": "webpack --watch",
     "start": "npm run watch",
-    "publish": "npm run flow && npm run build && crx pack extension -o better-things-to-do.crx",
+    "publish": "npm run flow && npm run build && zip -r extension.zip extenstion",
     "flow": "flow"
   },
   "author": "Artem Tyurin <artem.tyurin@gmail.com>",
