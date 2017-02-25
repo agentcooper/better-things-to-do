@@ -1,6 +1,6 @@
 {
   "name": "better-things-to-do",
-  "version": "0.0.3",
+  "version": "0.0.5",
   "description": "Better things to do",
   "main": "background.js",
   "scripts": {
